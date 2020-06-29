@@ -1,4 +1,3 @@
-import logging
 from airflow import AirflowException
 from airflow.sensors.base_sensor_operator import BaseSensorOperator
 from airflowhdi.hooks import LivyBatchHook
@@ -16,6 +15,13 @@ NON_TERMINAL_BATCH_STATES = [
 
 
 class LivyBatchSensor(BaseSensorOperator):
+    """
+    Monitors a spark job submitted through Livy, uptil a terminal state is achieved.
+    And then optionally does additional verification as well as printing of the logs
+
+    .. seealso::
+        See the documentation of :class:`airflowhdi.hooks.LivyBatchHook`
+    """
     template_fields = ['batch_id']
 
     def __init__(
@@ -30,6 +36,19 @@ class LivyBatchSensor(BaseSensorOperator):
         *args,
         **kwargs
     ):
+        """
+        :param cluster_name: name of the cluster to check the state of
+        :type cluster_name: str
+        :param azure_conn_id: azure connection to get config from
+        :type azure_conn_id: str
+
+        :param batch_id: batch ID of the livy spark job to monitor
+        :type batch_id: string
+        :param verify_in: Specify the additional verification method. Either `spark` or `yarn`
+        :type verify_in: string
+        :param spill_logs: whether or not to spill the logs of the batch job using livy's batch API
+        :type spill_logs: bool
+        """
         super().__init__(
             mode=mode,
             poke_interval=poke_interval,
@@ -62,9 +81,9 @@ class LivyBatchSensor(BaseSensorOperator):
                 "Batch %s has not finished yet (state is '%s')", self.batch_id, state)
             return False
         if state == "success":
-            logging.info(f"Batch {self.batch_id} has finished successfully!")
+            self.log.info(f"Batch {self.batch_id} has finished successfully!")
             if self.verify_in in VERIFICATION_METHODS:
-                logging.info(
+                self.log.info(
                     f"Additionally verifying status for batch id {self.batch_id} "
                     f"via {self.verify_in}..."
                 )

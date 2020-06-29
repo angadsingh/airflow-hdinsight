@@ -15,6 +15,11 @@ VERIFICATION_METHODS = ["spark", "yarn"]
 
 
 class LivyBatchHook(BaseHook):
+    """
+    Uses the Apache Livy `Batch API <https://livy.incubator.apache.org/docs/latest/rest-api.html>`_ to submit spark
+    jobs to a livy server, get batch state, verify batch state by quering either the spark history server or yarn
+    resource manager, spill the logs of the spark job post completion, etc.
+    """
     template_fields = ["file", "proxy_user", "class_name", "arguments", "jars", "py_files", "files", "driver_memory",
                        "driver_cores", "executor_memory", "executor_cores", "num_executors", "archives", "queue", "name",
                        "conf", "azure_conn_id", "cluster_name", "batch_id"]
@@ -36,7 +41,50 @@ class LivyBatchHook(BaseHook):
                  files=None, driver_memory=None, driver_cores=None, executor_memory=None, executor_cores=None,
                  num_executors=None, archives=None, queue=None, name=None, conf=None, azure_conn_id=None,
                  cluster_name=None, batch_id=None, verify_in=None):
+        """
+        A batch hook object represents a call to livy `POST /batches <https://livy.incubator.apache.org/docs/latest/rest-api.html>`_
 
+        :param file: File containing the application to execute
+        :type file: string
+        :param proxy_user: User to impersonate when running the job
+        :type file: string
+        :param class_name: Application Java/Spark main class
+        :type class_name: string
+        :param arguments: Command line arguments for the application
+        :type arguments: list[string]
+        :param jars: jars to be used in this session
+        :type jars: list[string]
+        :param py_files: Python files to be used in this session
+        :type py_files: list[string]
+        :param files: files to be used in this session
+        :type files: list[string]
+        :param driver_memory: Amount of memory to use for the driver process
+        :type driver_memory: string
+        :param driver_cores: Number of cores to use for the driver process
+        :type driver_cores: int
+        :param executor_memory: Amount of memory to use per executor process
+        :type executor_memory: string
+        :param executor_cores: Number of cores to use for each executor
+        :type executor_cores: int
+        :param num_executors: Number of executors to launch for this session
+        :type num_executors: int
+        :param archives: Archives to be used in this session
+        :type archives: list[string]
+        :param queue: The name of the YARN queue to which submitted
+        :type queue: string
+        :param name: The name of this session
+        :type name: string
+        :param conf: Spark configuration properties
+        :type conf: dict
+        :param azure_conn_id: Connection ID for this Azure HDInsight connection.
+        :type azure_conn_id: string
+        :param cluster_name: Unique cluster name of the HDInsight cluster
+        :type cluster_name: string
+        :param batch_id: Livy Batch ID as returned by the API
+        :type batch_id: string
+        :param verify_in: Specify the additional verification method. Either `spark` or `yarn`
+        :type verify_in: string
+        """
         super().__init__(source=None)
         self.file = file
         self.proxy_user = proxy_user
@@ -61,7 +109,7 @@ class LivyBatchHook(BaseHook):
         self.connections_created = False
 
     def create_livy_connections(self):
-        """"Creates a livy connection dynamically"""
+        """Creates a livy connection dynamically"""
         session = settings.Session()
         azure_conn = session.query(Connection).filter(Connection.conn_id == self.azure_conn_id).first()
 
@@ -95,6 +143,11 @@ class LivyBatchHook(BaseHook):
         self.connections_created = True
 
     def submit_batch(self):
+        """
+        Submit a livy batch
+        :return: the batch id returned by the livy server
+        :rtype: string
+        """
         if not self.connections_created:
             self.create_livy_connections()
         headers = {"X-Requested-By": "airflow", "Content-Type": "application/json"}
@@ -141,6 +194,11 @@ class LivyBatchHook(BaseHook):
         return self.batch_id
 
     def get_batch_state(self):
+        """
+        queries and gets the current livy batch state
+        :return: the livy batch state
+        :rtype: dict
+        """
         if not self.connections_created:
             self.create_livy_connections()
         self.log.info("Getting batch %s status...", self.batch_id)
@@ -153,6 +211,12 @@ class LivyBatchHook(BaseHook):
             raise AirflowBadRequest(ex)
 
     def verify(self):
+        """
+        does additional verification of a livy batch by either querying
+        the yarn resource manager or the spark history server.
+
+        :raises AirflowException: when the job is verified to have failed
+        """
         if not self.connections_created:
             self.create_livy_connections()
         app_id = self._get_spark_app_id(self.batch_id)
@@ -167,6 +231,13 @@ class LivyBatchHook(BaseHook):
                       app_id, self.batch_id)
 
     def _get_spark_app_id(self, batch_id):
+        """
+        Gets the spark application ID of a livy batch job
+
+        :param batch_id: the batch id of the livy batch job
+        :return: spark application ID
+        :rtype: string
+        """
         self.log.info("Getting Spark app id from Livy API for batch %s...", batch_id)
         endpoint = f"{LIVY_ENDPOINT}/{batch_id}"
         response = self.LocalConnHttpHook(self, method="GET", http_conn_id='livy_conn_id').run(
@@ -179,6 +250,12 @@ class LivyBatchHook(BaseHook):
             raise AirflowBadRequest(ex)
 
     def _check_spark_app_status(self, app_id):
+        """
+        Verifies whether this spark job has succeeded or failed
+        by querying the spark history server
+        :param app_id: application ID of the spark job
+        :raises AirflowException: when the job is verified to have failed
+        """
         self.log.info("Getting app status (id=%s) from Spark REST API...", app_id)
         endpoint = f"{SPARK_ENDPOINT}/{app_id}/jobs"
         response = self.LocalConnHttpHook(self, method="GET", http_conn_id='spark_conn_id').run(
@@ -204,6 +281,12 @@ class LivyBatchHook(BaseHook):
             raise AirflowBadRequest(ex)
 
     def _check_yarn_app_status(self, app_id):
+        """
+        Verifies whether this YARN job has succeeded or failed
+        by querying the YARN Resource Manager
+        :param app_id: the YARN application ID
+        :raises AirflowException: when the job is verified to have failed
+        """
         self.log.info("Getting app status (id=%s) from YARN RM REST API...", app_id)
         endpoint = f"{YARN_ENDPOINT}/{app_id}"
         response = self.LocalConnHttpHook(self, method="GET", http_conn_id='yarn_conn_id').run(
@@ -221,6 +304,7 @@ class LivyBatchHook(BaseHook):
             )
 
     def spill_batch_logs(self):
+        """Gets paginated batch logs from livy batch API and logs them"""
         if not self.connections_created:
             self.create_livy_connections()
         dashes = 50
@@ -250,6 +334,7 @@ class LivyBatchHook(BaseHook):
             line_from = actual_line_from + actual_lines
 
     def _fetch_log_page(self, hook: LocalConnHttpHook, endpoint, line_from, line_to):
+        """fetch a paginated log page from the livy batch API"""
         prepd_endpoint = endpoint + f"?from={line_from}&size={line_to}"
         response = hook.run(prepd_endpoint)
         try:
@@ -259,6 +344,7 @@ class LivyBatchHook(BaseHook):
             raise AirflowBadRequest(ex)
 
     def close_batch(self):
+        """close a livy batch"""
         self.log.info(f"Closing batch with id = %s", self.batch_id)
         batch_endpoint = f"{LIVY_ENDPOINT}/{self.batch_id}"
         self.LocalConnHttpHook(self, method="DELETE", http_conn_id='livy_conn_id').run(
@@ -267,6 +353,7 @@ class LivyBatchHook(BaseHook):
         self.log.info(f"Batch %s has been closed", self.batch_id)
 
     def _log_response_error(self, lookup_path, response, batch_id=None):
+        """log an error response from the livy batch API"""
         msg = "Can not parse JSON response."
         if batch_id is not None:
             msg += f" Batch id={batch_id}."

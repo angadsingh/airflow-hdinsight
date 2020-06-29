@@ -10,12 +10,9 @@ class AzureHDInsightClusterSensor(BaseSensorOperator):
     desired state: provisioning or running
     If it fails the sensor errors, failing the task.
 
-    :param cluster_name: name of the cluster to check the state of
-    :type cluster_name: str
-    :param azure_conn_id: azure connection to get config from
-    :type azure_conn_id: str
-    :param provisioning_only: poke up till provisioning only
-    :type provisioning_only: bool
+    .. seealso::
+            See the documentation of :class:`airflowhdi.hooks.AzureHDInsightHook`
+            for explanation on the parameters of this operator
     """
 
     PROV_ONLY_TERMINAL_STATES = [HDInsightClusterProvisioningState.in_progress,
@@ -37,6 +34,15 @@ class AzureHDInsightClusterSensor(BaseSensorOperator):
             *args,
             **kwargs
     ):
+        """
+        :param cluster_name: name of the cluster to check the state of
+        :type cluster_name: str
+        :param azure_conn_id: azure connection to get config from
+        :type azure_conn_id: str
+        :param provisioning_only: poke up till provisioning only if `True`,
+            else poke till the cluster hasn't achieved a terminal state
+        :type provisioning_only: bool
+        """
 
         super().__init__(
             poke_interval=poke_interval,

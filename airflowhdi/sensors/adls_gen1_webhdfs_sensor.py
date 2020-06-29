@@ -4,6 +4,9 @@ from airflow.utils.decorators import apply_defaults
 
 
 class AzureDataLakeStorageGen1WebHdfsSensor(BaseSensorOperator):
+    """
+    Waits for blobs matching a wildcard prefix to arrive on Azure Data Lake Storage.
+    """
     template_fields = ('glob_path',)  # type: Iterable[str]
     ui_color = '#901dd2'
 
@@ -13,6 +16,10 @@ class AzureDataLakeStorageGen1WebHdfsSensor(BaseSensorOperator):
                  azure_data_lake_conn_id='azure_data_lake_default',
                  *args,
                  **kwargs):
+        """
+        :param glob_path: glob path, allows wildcards
+        :param azure_data_lake_conn_id: connection reference to ADLS
+        """
         super(AzureDataLakeStorageGen1WebHdfsSensor, self).__init__(*args, **kwargs)
         self.glob_path = glob_path
         self.azure_data_lake_conn_id = azure_data_lake_conn_id

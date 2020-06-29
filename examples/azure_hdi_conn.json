@@ -1,0 +1,23 @@
+{
+	"CLUSTER_LOGIN_USER_NAME": "admin",
+	"CLUSTER_PASSWORD": "Password123@",
+	"CONTAINER_NAME": "hdi",
+	"SSH_PASSWORD": "Password123@",
+	"SSH_USER_NAME": "notadmin",
+	"STORAGE_ACCOUNT_KEY": "hl9JKhTluKSadfasdfa%$#@#SgAfasa4o97FL+mgjsK5yzYR9B/Pid1JCO1gTIzA9uAGsWPrnTqnW6nxRqg==",
+	"STORAGE_ACCOUNT_NAME": "angad",
+	"resource_group_name": "angad",
+	"resource_group_location": "East US",
+	"servicePrincipal": {
+		"clientId": "af0854fd-1235-42b6-b325-875d6fb69d2a",
+		"clientSecret": "RbXLbwYfdgaf9PDhT-PtIZMaO-JJsoUJRDA",
+		"subscriptionId": "40308a30-fsd3-4f5c-8003-50b2a714e840",
+		"tenantId": "89359cf4-9e60-4099-523a-775a0cfe27a7",
+		"activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
+		"resourceManagerEndpointUrl": "https://management.azure.com/",
+		"activeDirectoryGraphResourceId": "https://graph.windows.net/",
+		"sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
+		"galleryEndpointUrl": "https://gallery.azure.com/",
+		"managementEndpointUrl": "https://management.core.windows.net/"
+	}
+}

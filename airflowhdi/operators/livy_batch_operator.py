@@ -1,19 +1,3 @@
-"""
-Workflow:
-1. Submit a batch to Livy.
-2. Poll API until it's ready.
-3. If an additional verification method is specified, retrieve the job status
-there and disregard the batch status from Livy.
-
-Supported verification methods are Spark/YARN REST API.
-When the batch job is running in cluster mode on YARN cluster,
-it sometimes shows as "succeeded" even when underlying job fails.
-
-https://livy.incubator.apache.org/docs/latest/rest-api.html
-https://spark.apache.org/docs/latest/monitoring.html#rest-api
-https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/ResourceManagerRest.html
-"""
-
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
@@ -21,6 +5,28 @@ from airflowhdi.hooks import LivyBatchHook
 
 
 class LivyBatchOperator(BaseOperator):
+    """
+    Quoted from `airflow-livy-operators <https://github.com/panovvv/airflow-livy-operators>`_:
+
+    .. highlight:: none
+
+    ::
+
+        Workflow
+        1. Submit a batch to Livy.
+        2. Poll API until it's ready.
+        3. If an additional verification method is specified, retrieve the job status
+            there and disregard the batch status from Livy.
+
+        Supported verification methods are Spark/YARN REST API.
+        When the batch job is running in cluster mode on YARN cluster,
+        it sometimes shows as "succeeded" even when underlying job fails.
+
+    .. seealso::
+        * https://livy.incubator.apache.org/docs/latest/rest-api.html
+        * https://spark.apache.org/docs/latest/monitoring.html#rest-api
+        * https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/ResourceManagerRest.html
+    """
     template_fields = ["name", "arguments", "batch_hook"]
 
     @apply_defaults
@@ -47,6 +53,11 @@ class LivyBatchOperator(BaseOperator):
         *args,
         **kwargs
     ):
+        """
+        .. seealso::
+            See the documentation of :class:`airflowhdi.hooks.LivyBatchHook`
+            for explanation on the parameters of this operator
+        """
         super(LivyBatchOperator, self).__init__(*args, **kwargs)
         self.name = name
         self.arguments = arguments

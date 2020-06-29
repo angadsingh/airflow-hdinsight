@@ -12,13 +12,16 @@ class WasbWildcardPrefixSensor(BaseSensorOperator):
 
     :param container_name: Name of the container.
     :type container_name: str
-    :param wildcard_prefix: Prefix of the blob.
+    :param wildcard_prefix: Prefix of the blob. Allows wildcards.
     :type wildcard_prefix: str
     :param wasb_conn_id: Reference to the wasb connection.
     :type wasb_conn_id: str
     :param check_options: Optional keyword arguments that
         `WasbHook.check_for_prefix()` takes.
     :type check_options: dict
+
+    .. seealso::
+        See the documentation of :class:`airflow.contrib.sensors.wasb_sensor.WasbBlobSensor`
     """
 
     template_fields = ('container_name', 'wildcard_prefix')
@@ -37,8 +40,6 @@ class WasbWildcardPrefixSensor(BaseSensorOperator):
     def poke(self, context):
         self.log.info('Poking for wildcard prefix: %s in wasb://%s', self.wildcard_prefix, self.container_name)
         hook = WasbHook(wasb_conn_id=self.wasb_conn_id)
-
-
 
         prefix = re.split(r'[*]', self.wildcard_prefix, 1)[0]
         klist = hook.connection.list_blobs(self.container_name, prefix,

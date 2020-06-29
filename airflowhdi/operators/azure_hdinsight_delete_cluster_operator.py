@@ -1,22 +1,3 @@
-# -*- coding: utf-8 -*-
-#
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-#
 from airflowhdi.hooks import AzureHDInsightHook
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
@@ -24,13 +5,10 @@ from airflow.utils.decorators import apply_defaults
 
 class AzureHDInsightDeleteClusterOperator(BaseOperator):
     """
-    :param azure_conn_id: connection id of a service principal
-        which will be used to delete Hdinsight cluster
-    :type azure_conn_id: str
-    :param cluster_name: cluster name of will  deleting
-    :type cluster_name: str
+    .. seealso::
+            See the documentation of :class:`airflowhdi.hooks.AzureHDInsightHook`
+            for explanation on the parameters of this operator
     """
-
     @apply_defaults
     def __init__(self,
                  cluster_name,

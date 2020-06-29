@@ -1,22 +1,3 @@
-# -*- coding: utf-8 -*-
-#
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-#
 from airflow import settings, AirflowException
 from azure.mgmt.hdinsight.models import ClusterCreateProperties, ClusterDefinition, ComputeProfile, Role, \
     LinuxOperatingSystemProfile, OsProfile, \
@@ -29,15 +10,10 @@ from airflow.utils.decorators import apply_defaults
 
 class AzureHDInsightCreateClusterOperator(BaseOperator):
     """
-    See https://docs.microsoft.com/en-us/python/api/overview/azure/hdinsight?view=azure-python
-
-    :param azure_conn_id: connection id of a service principal
-            which will be used to delete Hdinsight cluster
-    :type azure_conn_id: str
-    :param cluster_name: cluster name of will  creating
-    :type cluster_name: str
+    .. seealso::
+            See the documentation of :class:`airflowhdi.hooks.AzureHDInsightHook`
+            for explanation on the parameters of this operator
     """
-
     template_fields = ['cluster_params']
 
     #to allow deep nested templatization by airflow on the entire cluster param spec
@@ -58,6 +34,18 @@ class AzureHDInsightCreateClusterOperator(BaseOperator):
                  *args,
                  **kwargs
                  ):
+        """
+        :param azure_conn_id: connection ID of the Azure HDInsight cluster.
+        :type azure_conn_id: string
+        :param cluster_name: Unique cluster name of the HDInsight cluster
+        :type cluster_name: str
+        :param cluster_params: the :class:`azure.mgmt.hdinsight.models.ClusterCreateProperties` representing the HDI cluster spec.
+            You can explore some sample specs `here <https://github.com/Azure-Samples/hdinsight-python-sdk-samples>`_.
+            This python object follows the same structure as the `HDInsight arm template <https://docs.microsoft.com/en-us/azure/templates/microsoft.hdinsight/2018-06-01-preview/clusters>`_.
+
+            :download:`Example ClusterCreateProperties<../../examples/azure_hdi_cluster_conn.py>`
+        :type cluster_params: ClusterCreateProperties
+        """
         super(AzureHDInsightCreateClusterOperator, self).__init__(*args, **kwargs)
 
         self.cluster_name = cluster_name
@@ -73,8 +61,8 @@ class AzureHDInsightCreateClusterOperator(BaseOperator):
 
 class ConnectedAzureHDInsightCreateClusterOperator(AzureHDInsightCreateClusterOperator):
     """
-    An extension of the AzureHDInsightCreateClusterOperator which allows
-    getting credentials and other common properties for ClusterCreateProperties
+    An extension of the :class:`AzureHDInsightCreateClusterOperator` which allows
+    getting credentials and other common properties for :class:`azure.mgmt.hdinsight.models.ClusterCreateProperties`
     from a connection
     """
     # make sure these are imported. eval() below needs them.
@@ -89,6 +77,17 @@ class ConnectedAzureHDInsightCreateClusterOperator(AzureHDInsightCreateClusterOp
                  *args,
                  **kwargs
                  ):
+        """
+        :param azure_conn_id: connection ID of the Azure HDInsight cluster.
+        :type azure_conn_id: string
+        :param hdi_conn_id: connection ID of the connection that contains
+            a :class:`azure.mgmt.hdinsight.models.ClusterCreateProperties` object in its extra field
+        :type hdi_conn_id: str
+        :param cluster_params: cluster creation spec
+        :type cluster_params: ClusterCreateProperties
+        :param cluster_name: Unique cluster name of the HDInsight cluster
+        :type cluster_name: str
+        """
         session = settings.Session()
         azure_conn = session.query(Connection).filter(Connection.conn_id == azure_conn_id).first()
         hdi_conn = session.query(Connection).filter(Connection.conn_id == hdi_conn_id).first()

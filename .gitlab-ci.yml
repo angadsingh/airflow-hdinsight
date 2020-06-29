@@ -1,0 +1,11 @@
+pages:
+  stage: deploy
+  script:
+    - pip install -U sphinx
+    - pip install -i docs/requirements
+    - sphinx-build -b html ./docs public
+  artifacts:
+    paths:
+    - public
+  only:
+  - initial
