@@ -1,3 +1,6 @@
+airflow-hdinsight
+=================
+
 A set of airflow hooks, operators and sensors to allow airflow DAGs to operate with the Azure HDInsight platform, for cluster creation and monitoring as well as job submission and monitoring. Also included are some enhanced Azure Blob and Data Lake sensors.
 
 This project is both an amalgamation and enhancement of existing open source airflow extensions, plus new extensions to solve the problem.
