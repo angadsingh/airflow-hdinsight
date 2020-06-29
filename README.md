@@ -23,7 +23,7 @@ Airflow extensions in this project
 
 **About the origins of the HDinsight operator work**
 
-The HDInsight operator work is loosely inspired from  [alikemalocalan/airflow-hdinsight-operators](alikemalocalan/airflow-hdinsight-operators), however that has a huge number of defects, as to why it was [never accepted](https://issues.apache.org/jira/browse/AIRFLOW-3604) to be [merged](https://github.com/apache/airflow/pull/4460) into airflow in the first place. This project's work solves all of those issues and more, is frankly a full rewrite.
+The HDInsight operator work is loosely inspired from  [alikemalocalan/airflow-hdinsight-operators](alikemalocalan/airflow-hdinsight-operators), however that has a huge number of defects, as to why it was [never accepted](https://issues.apache.org/jira/browse/AIRFLOW-3604) to be [merged](https://github.com/apache/airflow/pull/4460) into airflow in the first place. This project solves all of those issues and more, and is frankly a full rewrite.
 
 **About the origins of the livy work**
 
