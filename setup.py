@@ -19,7 +19,8 @@ setup(
         'azure-storage-blob==2.1.0',
         'azure-storage-common==2.1.0',
         'azure-storage-nspkg==3.1.0',
-        'azure-datalake-store'
+        'azure-datalake-store',
+        'paramiko'
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
