@@ -1,11 +1,16 @@
-airflow-hdinsight
-=================
+# airflow-hdinsight
+
+[![Documentation Status](https://readthedocs.org/projects/docs/badge/?version=latest)](https://airflow-hdinsight.readthedocs.io/en/latest/)
 
 A set of airflow hooks, operators and sensors to allow airflow DAGs to operate with the Azure HDInsight platform, for cluster creation and monitoring as well as job submission and monitoring. Also included are some enhanced Azure Blob and Data Lake sensors.
 
 This project is both an amalgamation and enhancement of existing open source airflow extensions, plus new extensions to solve the problem.
 
-Airflow extensions in this project
+##### Installation
+
+`pip install airflow-hdinsight`
+
+##### Extensions
 
 | Type     | Name                                         | What it does                                                 |
 | -------- | -------------------------------------------- | ------------------------------------------------------------ |
@@ -21,11 +26,11 @@ Airflow extensions in this project
 | Sensor   | WasbWildcardPrefixSensor                     | An enhancement to the [WasbPrefixSensor](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/sensors/wasb.py#L62) to support sensing on a wildcard prefix |
 | Sensor   | AzureDataLakeStorageGen1WebHdfsSensor        | Uses airflow's [AzureDataLakeHook](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/hooks/azure_data_lake.py) to sense a glob path (which implicitly supports wildcards) on ADLS Gen 1. ADLS Gen 2 is not yet supported in airflow. |
 
-**About the origins of the HDinsight operator work**
+**Origins of the HDinsight operator work**
 
 The HDInsight operator work is loosely inspired from  [alikemalocalan/airflow-hdinsight-operators](alikemalocalan/airflow-hdinsight-operators), however that has a huge number of defects, as to why it was [never accepted](https://issues.apache.org/jira/browse/AIRFLOW-3604) to be [merged](https://github.com/apache/airflow/pull/4460) into airflow in the first place. This project solves all of those issues and more, and is frankly a full rewrite.
 
-**About the origins of the livy work**
+**Origins of the livy work**
 
 The livy batch operator is based on the work by [panovvv](https://github.com/panovvv)'s project [airfllow-livy-operators](https://github.com/panovvv/airflow-livy-operators). It does some necessary changes:
 
@@ -37,7 +42,7 @@ The livy batch operator is based on the work by [panovvv](https://github.com/pan
 - Changes logging to LoggingMixin calls
 - Allows templatization of fields
 
-**About the state of airflow livy operators in the wild..**
+**State of airflow livy operators in the wild..**
 
 As it stands today (June of 2020), there are multiple airflow livy operator projects out there:
 
