@@ -41,6 +41,6 @@ The livy batch operator is based on the work by [panovvv](https://github.com/pan
 
 As it stands today (June of 2020), there are multiple airflow livy operator projects out there:
 
-- [panovvv/airflow-livy-operators](panovvv/airflow-livy-operators): the project which this project basis its work on
+- [panovvv/airflow-livy-operators](panovvv/airflow-livy-operators): the project which this project bases its work on
 - the [official livy provider](https://github.com/apache/airflow/tree/master/airflow/providers/apache/livy) in airflow 2.0, with a backport available for airflow 1.1.x: alas the official provider has very limited functionality - it does not spill the job's logs, and it does not do additional verification for job completion using spark history server or yarn resource manager, amongst other limitations
 - [rssanders3/airflow-spark-operator-plugin](rssanders3/airflow-spark-operator-plugin): this is the oldest livy operator, which only supports livy sessions and not batches. there's a copy of this in [alikemalocalan/airflow-hdinsight-operators](alikemalocalan/airflow-hdinsight-operators).

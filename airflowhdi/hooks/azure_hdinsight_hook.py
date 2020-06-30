@@ -38,14 +38,15 @@ class AzureHDInsightHook(BaseHook):
         Return a HDInsight Management client from the Azure Python SDK for HDInsight
 
         This hook requires a service principal in order to work.
-        You can create a service principal from the az CLI like so:
-        az ad sp create-for-rbac --name localtest-sp-rbac --skip-assignment --sdk-auth > local-sp.json
+        You can create a service principal from the az CLI like so::
 
-        References:
+          az ad sp create-for-rbac --name localtest-sp-rbac --skip-assignment \\
+            --sdk-auth > local-sp.json
 
-        * https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal
-        * https://docs.microsoft.com/en-us/python/api/overview/azure/hdinsight?view=azure-python#authentication-example-using-a-service-principal
-        * https://docs.microsoft.com/en-us/azure/developer/python/azure-sdk-authenticate?view=azure-python&tabs=cmd#authenticate-with-a-json-dictionary
+        .. seealso::
+            * `Create an Azure AD app & service principal in the portal - Microsoft identity platform <https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal>`_
+            * `Azure HDInsight SDK for Python <https://docs.microsoft.com/en-us/python/api/overview/azure/hdinsight?view=azure-python#authentication-example-using-a-service-principal>`_
+            * `How to authenticate Python applications with Azure services <https://docs.microsoft.com/en-us/azure/developer/python/azure-sdk-authenticate?view=azure-python&tabs=cmd#authenticate-with-a-json-dictionary>`_
 
         """
         conn = self.get_connection(self.conn_id)
