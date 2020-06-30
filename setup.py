@@ -1,14 +1,19 @@
 from setuptools import setup
 
+# read the contents of your README file
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name='airflow-hdinsight',
-    version='0.0.1',
+    version='0.0.1.1',
     author="Angad Singh",
     author_email="angad.singh@trufactor.io",
     description="HDInsight provider for Airflow",
-    long_description="""A set of airflow hooks, operators and sensors to allow airflow DAGs
-        to operate with the Azure HDInsight platform, for cluster creation and monitoring
-        as well as job submission and monitoring.""",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     license="Apache Software License (http://www.apache.org/licenses/LICENSE-2.0)",
     url="https://github.com/angadsingh/airflow-hdinsight",
     py_modules=['airflowhdi'],
