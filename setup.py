@@ -9,8 +9,8 @@ setup(
     long_description="""A set of airflow hooks, operators and sensors to allow airflow DAGs
         to operate with the Azure HDInsight platform, for cluster creation and monitoring
         as well as job submission and monitoring.""",
-    license="MIT",
-    url="https://gitlab.pinsightmedia.com/telco-dmp/airflow-hdinsight",
+    license="Apache Software License (http://www.apache.org/licenses/LICENSE-2.0)",
+    url="https://github.com/angadsingh/airflow-hdinsight",
     py_modules=['airflowhdi'],
     install_requires=[
         'azure-mgmt-hdinsight~=1.5.1',
@@ -25,7 +25,7 @@ setup(
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.7'
