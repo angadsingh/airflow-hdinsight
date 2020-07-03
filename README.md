@@ -1,6 +1,8 @@
 # airflow-hdinsight
 
 [![Documentation Status](https://readthedocs.org/projects/docs/badge/?version=latest)](https://airflow-hdinsight.readthedocs.io/en/latest/)
+[![PyPi Version](https://img.shields.io/pypi/v/airflow-hdinsight.svg)](https://pypi.org/project/airflow-hdinsight)
+[![Supported versions](https://img.shields.io/pypi/pyversions/airflow-hdinsight.svg)](https://pypi.org/project/airflow-hdinsight)
 
 A set of airflow hooks, operators and sensors to allow airflow DAGs to operate with the Azure HDInsight platform, for cluster creation and monitoring as well as job submission and monitoring. Also included are some enhanced Azure Blob and Data Lake sensors.
 
