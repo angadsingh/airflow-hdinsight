@@ -47,3 +47,4 @@ venv.bak/
 docs/_build
 dist
 *.egg-info/
+build
