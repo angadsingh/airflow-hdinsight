@@ -48,3 +48,5 @@ class WasbWildcardPrefixSensor(BaseSensorOperator):
             blob_matches = [k for k in klist if fnmatch.fnmatch(k.name, self.wildcard_prefix)]
             if blob_matches:
                 return True
+
+        return False

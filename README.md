@@ -3,6 +3,7 @@
 [![Documentation Status](https://readthedocs.org/projects/docs/badge/?version=latest)](https://airflow-hdinsight.readthedocs.io/en/latest/)
 [![PyPi Version](https://img.shields.io/pypi/v/airflow-hdinsight.svg)](https://pypi.org/project/airflow-hdinsight)
 [![Supported versions](https://img.shields.io/pypi/pyversions/airflow-hdinsight.svg)](https://pypi.org/project/airflow-hdinsight)
+[![PyPi downloads](https://img.shields.io/pypi/dm/airflow-hdinsight?label=pip%20installs)](https://pypistats.org/packages/airflow-hdinsight)
 
 A set of airflow hooks, operators and sensors to allow airflow DAGs to operate with the Azure HDInsight platform, for cluster creation and monitoring as well as job submission and monitoring. Also included are some enhanced Azure Blob and Data Lake sensors.
 
@@ -14,6 +15,8 @@ This project is both an amalgamation and enhancement of existing open source air
 
 ##### Extensions
 
+``airflowhdi``
+
 | Type     | Name                                         | What it does                                                 |
 | -------- | -------------------------------------------- | ------------------------------------------------------------ |
 | Hook     | AzureHDInsightHook                           | Uses the HDInsightManagementClient from the [HDInsight SDK for Python](https://docs.microsoft.com/en-us/python/api/overview/azure/hdinsight?view=azure-python) to expose several operations on an HDInsight cluster - get cluster state, create, delete. |
@@ -22,11 +25,16 @@ This project is both an amalgamation and enhancement of existing open source air
 | Operator | ConnectedAzureHDInsightCreateClusterOperator | Extends the AzureHDInsightCreateClusterOperator to allow fetching of the security credentials and cluster creation spec from an airflow connection |
 | Operator | AzureHDInsightSshOperator                    | Uses the AzureHDInsightHook and SSHHook to run an SSH command on the master node of the given HDInsight cluster |
 | Sensor   | AzureHDInsightClusterSensor                  | A sensor to monitor the provisioning state or running state (can switch between either mode) of a given HDInsight cluster. Uses the AzureHDInsightHook. |
+| Sensor   | WasbWildcardPrefixSensor                     | An enhancement to the [WasbPrefixSensor](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/sensors/wasb.py#L62) to support sensing on a wildcard prefix |
+| Sensor   | AzureDataLakeStorageGen1WebHdfsSensor        | Uses airflow's [AzureDataLakeHook](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/hooks/azure_data_lake.py) to sense a glob path (which implicitly supports wildcards) on ADLS Gen 1. ADLS Gen 2 is not yet supported in airflow. |
+
+``airflowlivy``
+
+| Type     | Name                                         | What it does                                                 |
+| -------- | -------------------------------------------- | ------------------------------------------------------------ |
 | Hook     | LivyBatchHook                                | Uses the Apache Livy [Batch API](https://livy.incubator.apache.org/docs/latest/rest-api.html) to submit spark jobs to a livy server, get batch state, verify batch state by quering either the spark history server or yarn resource manager, spill the logs of the spark job post completion, etc. |
 | Operator | LivyBatchOperator                            | Uses the LivyBatchHook to submit a spark job to a livy server |
 | Sensor   | LivyBatchSensor                              | Uses the LivyBatchHook to sense termination and verify completion, spill logs of a spark job submitted earlier to a livy server |
-| Sensor   | WasbWildcardPrefixSensor                     | An enhancement to the [WasbPrefixSensor](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/sensors/wasb.py#L62) to support sensing on a wildcard prefix |
-| Sensor   | AzureDataLakeStorageGen1WebHdfsSensor        | Uses airflow's [AzureDataLakeHook](https://github.com/apache/airflow/blob/master/airflow/providers/microsoft/azure/hooks/azure_data_lake.py) to sense a glob path (which implicitly supports wildcards) on ADLS Gen 1. ADLS Gen 2 is not yet supported in airflow. |
 
 **Origins of the HDinsight operator work**
 

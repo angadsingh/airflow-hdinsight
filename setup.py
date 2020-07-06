@@ -8,7 +8,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='airflow-hdinsight',
-    version='0.0.1.2',
+    version='0.0.1.3',
     author="Angad Singh",
     author_email="angad.singh@trufactor.io",
     description="HDInsight provider for Airflow",
@@ -16,7 +16,7 @@ setup(
     long_description_content_type='text/markdown',
     license="Apache Software License (http://www.apache.org/licenses/LICENSE-2.0)",
     url="https://github.com/angadsingh/airflow-hdinsight",
-    packages = find_namespace_packages(include=["airflowhdi.*"]),
+    packages = find_namespace_packages(include=["airflowhdi.*", "airflowlivy.*"]),
     install_requires=[
         'azure-mgmt-hdinsight~=1.5.1',
         'msrestazure~=0.6.3',

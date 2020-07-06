@@ -1,10 +1,11 @@
-from airflow.hooks.base_hook import BaseHook
-from json import JSONDecodeError
-from numbers import Number
 import json
-from airflow.exceptions import AirflowBadRequest, AirflowException
+from json.decoder import JSONDecodeError
+from numbers import Number
+
+from airflow import settings, AirflowException
+from airflow.exceptions import AirflowBadRequest
+from airflow.hooks.base_hook import BaseHook
 from airflow.hooks.http_hook import HttpHook
-from airflow import settings
 from airflow.models import Connection
 
 LIVY_ENDPOINT = "batches"

@@ -1,7 +1,6 @@
 import os
 
 from azure.common.client_factory import get_client_from_json_dict
-from azure.common.credentials import ServicePrincipalCredentials
 from azure.mgmt.hdinsight import HDInsightManagementClient
 from azure.mgmt.hdinsight.models import ClusterCreateProperties, ClusterCreateParametersExtended, ClusterGetProperties, \
     ErrorResponseException
@@ -53,15 +52,6 @@ class AzureHDInsightHook(BaseHook):
         servicePrincipal = conn.extra_dejson.get('servicePrincipal', False)
         if servicePrincipal:
             return get_client_from_json_dict(HDInsightManagementClient, servicePrincipal)
-
-        credentials = ServicePrincipalCredentials(
-            client_id=servicePrincipal['clientId'],
-            secret=servicePrincipal['clientSecret'],
-            tenant=servicePrincipal['tenantId']
-        )
-
-        subscription_id = servicePrincipal['subscriptionId']
-        return HDInsightManagementClient(credentials, str(subscription_id))
 
     def create_cluster(self, cluster_create_properties: ClusterCreateProperties, cluster_name):
         """

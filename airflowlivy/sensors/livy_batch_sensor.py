@@ -1,6 +1,7 @@
 from airflow import AirflowException
 from airflow.sensors.base_sensor_operator import BaseSensorOperator
-from airflowhdi.hooks import LivyBatchHook
+
+from airflowlivy.hooks.livy_batch_hook import LivyBatchHook
 
 VERIFICATION_METHODS = ["spark", "yarn"]
 NON_TERMINAL_BATCH_STATES = [
@@ -97,4 +98,3 @@ class LivyBatchSensor(BaseSensorOperator):
             raise AirflowException(f"Batch {self.batch_id} failed with state '{state}'")
         else:
             return True
-

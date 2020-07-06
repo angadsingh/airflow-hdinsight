@@ -1,7 +1,7 @@
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
 
-from airflowhdi.hooks import LivyBatchHook
+from airflowlivy.hooks.livy_batch_hook import LivyBatchHook
 
 
 class LivyBatchOperator(BaseOperator):
