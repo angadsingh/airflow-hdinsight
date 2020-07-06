@@ -26,7 +26,9 @@ setup(
         'azure-storage-nspkg==3.1.0',
         'azure-datalake-store',
         'paramiko',
-        'sshtunnel'
+        'sshtunnel',
+        'parameterized',
+        'alchemy-mock'
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
