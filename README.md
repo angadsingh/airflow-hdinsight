@@ -48,7 +48,7 @@ The livy batch operator is based on the work by [panovvv](https://github.com/pan
 
 - Seperates the operator into a hook (LivyBatchHook), an operator (LivyBatchOperator) and a sensor (LivyBatchSensor)
 - Adds additional verification and log spilling to the sensor (the original sensor does not)
-- Removes additional verifiation and log spilling from the operator - hence alllowing a async pattern akin to the EMR add step operator and step sensor.
+- Removes additional verification and log spilling from the operator - hence alllowing a async pattern akin to the EMR add step operator and step sensor.
 - Creates livy, spark and YARN airflow connections dynamically from an Azure HDInsight connection
 - Returns the batch ID from the operator so that a sensor can use it after being passed through XCom
 - Changes logging to LoggingMixin calls
